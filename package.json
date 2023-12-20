@@ -1,0 +1,15 @@
+{
+  "name": "robootjobs",
+  "version": "1.0.0",
+  "description": "<div style=\"background-color: #00bfbf; padding: 20px; border-radius: 10px; margin-bottom: 20px;\">\r   <img width=\"100%\" src=\"https://capsule-render.vercel.app/api?type=waving&color=00bfbf&height=120&section=header\"/>",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "express": "^4.18.2"
+  }
+}
