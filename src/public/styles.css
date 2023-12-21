@@ -1,0 +1,155 @@
+body {
+  margin: 0;
+  padding: 0;
+  font-family: 'Arial', sans-serif;
+  background-size: cover;
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+  overflow: hidden;
+}
+
+/* Adicione um efeito de onda laranja ao fundo */
+body::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, #ff8b00 0%, #ffffff 100%);
+  z-index: -1;
+  animation: waveAnimation 5s linear infinite alternate; /* Adicione esta linha para a animação */
+}
+
+@keyframes waveAnimation {
+  0% {
+    clip-path: polygon(0 30%, 100% 30%, 100% 100%, 0 100%);
+  }
+  100% {
+    clip-path: polygon(0 50%, 100% 50%, 100% 100%, 0 100%);
+  }
+}
+
+@keyframes waveAnimation {
+  0% {
+    clip-path: polygon(0 30%, 100% 30%, 100% 100%, 0 100%);
+  }
+  100% {
+    clip-path: polygon(0 50%, 100% 50%, 100% 100%, 0 100%);
+  }
+}
+
+.login-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: #fff;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  padding: 40px;
+  position: relative;
+  z-index: 1;
+}
+.login-form {
+  margin-left: 30px;
+  border-radius: 10px;
+}
+
+form {
+  display: flex;
+  flex-direction: column;
+}
+
+label {
+  margin-bottom: 8px;
+}
+
+input {
+  padding: 10px;
+  margin-bottom: 16px;
+}
+
+button {
+  padding: 12px;
+  background-color: #3498db;
+  color: #fff;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+button:hover {
+  background-color: #2980b9;
+}
+
+/* Estilo para dispositivos menores que 768px de largura */
+@media screen and (max-width: 768px) {
+  .login-container {
+    flex-direction: column; /* Muda para layout de coluna em dispositivos menores */
+    align-items: center; /* Centraliza os itens na coluna */
+  }
+
+  .cute-robot-v1 {
+    order: -1; /* Move o robô para o topo do container */
+    margin-bottom: 20px; /* Adiciona um espaçamento abaixo do robô */
+  }
+
+  .login-form {
+    margin-top: 20px;
+    margin-left: 0; /* Remove a margem à esquerda no formulário */
+    width: 100%; /* Garante que o formulário ocupe a largura total do container */
+  }
+}
+
+/* Adicione uma margem no fundo para o corpo da página para evitar que o robô seja cortado */
+input {
+  padding: 15px;
+  margin-bottom: 20px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  box-shadow: inset 0 2px 5px rgba(0, 0, 0, 0.1);
+  transition: border-color 0.3s ease-in-out;
+}
+
+input:focus {
+  border-color: #3498db;
+}
+
+button:hover {
+  background-color: #2980b9;
+}
+
+/* Estilos para o botão "Quero ser gerenciador" */
+#gerenciadorButton {
+  padding: 15px;
+  background-color: #f1c40f; /* Amarelo */
+  color: #fff;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s ease-in-out;
+  margin-top: 10px; /* Espaçamento superior */
+}
+
+#gerenciadorButton:hover {
+  background-color: #d4ac0d; /* Amarelo escuro ao passar o mouse */
+}
+/* Adicione um estilo para o rótulo (label) */
+label {
+  margin-bottom: 8px;
+  font-weight: bold;
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+  color: #ff8b00; /* Cor alaranjada */
+  transition: color 0.3s ease-in-out; /* Transição suave da cor ao longo de 0.3 segundos */
+}
+
+label:hover {
+  color: #ffae42; /* Cor alaranjada mais clara quando o mouse estiver sobre a etiqueta */
+}
+/* Adicione estilos adicionais para o formulário */
+form {
+  width: 300px; /* Ajuste conforme necessário */
+  margin: 0 auto;
+}

@@ -1,0 +1,136 @@
+<!-- src/views/login/index.html -->
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="./styles.css">
+  <link rel="stylesheet" href="./robo.css">
+  <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+  <style>
+   .custom-alert {
+      display: none;
+      position: fixed;
+      bottom: 16px;
+      right: 16px;
+      padding: 16px;
+      background-color: #f44336;
+      color: #fff;
+      border-radius: 4px;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    }
+
+    .custom-alert.show {
+      display: block;
+    }
+
+    .close-btn {
+      cursor: pointer;
+      position: absolute;
+      top: 8px;
+      right: 8px;
+      color: #fff;
+    }
+
+    /* Add loading styles */
+    .loading {
+      cursor: not-allowed;
+      background-color: #ddd;
+    }
+  </style>
+  <title>RJobs Login</title>
+</head>
+
+<body>
+  <div class="login-container cute-robot-v1">
+    <div class="circle-bg">
+      <div class="robot-ear left"></div>
+      <div class="robot-head">
+        <div class="robot-face">
+          <div class="eyes left"></div>
+          <div class="eyes right"></div>
+          <div class="mouth"></div>
+        </div>
+      </div>
+      <div class="robot-ear right"></div>
+      <div class="robot-body"></div>
+    </div>
+    <div class="login-form">
+      <form id="loginForm">
+        <label for="username">ROOBOTMAIL:</label>
+        <input type="text" id="username" name="username" required>
+        <label for="password">PASSWORD:</label>
+        <input type="password" id="password" name="password" required>
+        <button type="submit" id="submitButton">Entrar</button>
+        <button type="button" id="gerenciadorButton">Quero ser gerenciador</button>
+      </form>
+    </div>
+  </div>
+
+  <!-- Custom alert container -->
+  <div id="customAlert" class="custom-alert">
+    <span id="alertMessage"></span>
+    <span class="close-btn" onclick="closeAlert()">×</span>
+  </div>
+
+  <script>
+    document.getElementById('loginForm').addEventListener('submit', async function (event) {
+      event.preventDefault();
+
+      var username = document.getElementById('username').value;
+      var password = document.getElementById('password').value;
+
+      // Disable the submit button and add loading style
+      document.getElementById('submitButton').disabled = true;
+      document.getElementById('submitButton').classList.add('loading');
+
+      try {
+        const response = await axios.post('/', { username, password });
+        const data = response.data;
+
+        if (data.message === 'Login successful') {
+          window.location.href = 'http://dev01.briotecnologia.com.br:3000/dashboard';
+        } else {
+          // Display custom alert for login failure
+          displayAlert('Credenciais inválidas.');
+        }
+      } catch (error) {
+        console.error('Erro ao enviar dados do formulário:', error);
+
+        // Check if the status code is 401 (Unauthorized)
+        if (error.response && error.response.status === 401) {
+          // Display custom alert for invalid credentials
+          displayAlert('Credenciais inválidas.');
+        } else {
+          // Display custom alert for unexpected error
+          displayAlert('Um erro inesperado ocorreu.');
+        }
+      } finally {
+        // Enable the submit button and remove loading style
+        document.getElementById('submitButton').disabled = false;
+        document.getElementById('submitButton').classList.remove('loading');
+      }
+    });
+
+    function displayAlert(message) {
+      const alertContainer = document.getElementById('customAlert');
+      const alertMessage = document.getElementById('alertMessage');
+
+      alertMessage.textContent = message;
+      alertContainer.classList.add('show');
+
+      // Auto-hide the alert after 5 seconds (adjust as needed)
+      setTimeout(() => {
+        closeAlert();
+      }, 5000);
+    }
+
+    function closeAlert() {
+      const alertContainer = document.getElementById('customAlert');
+      alertContainer.classList.remove('show');
+    }
+  </script>
+</body>
+
+</html>
