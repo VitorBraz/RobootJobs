@@ -1,5 +1,6 @@
 const express = require('express');
 const bodyParser = require('body-parser');
+const cookieParser = require('cookie-parser');
 const cors = require('cors');
 const mysql = require('mysql2/promise');
 const moment = require('moment');
@@ -9,6 +10,7 @@ const apiN8NRouter = require('./src/routes/api-n8n');
 
 const app = express();
 const PORT = 3000;
+app.use(cookieParser());
 
 
 app.use(bodyParser.json());

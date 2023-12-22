@@ -72,6 +72,8 @@ input {
 }
 
 button {
+  letter-spacing:normal;
+  font-weight: bold;
   padding: 12px;
   background-color: #3498db;
   color: #fff;
@@ -123,6 +125,8 @@ button:hover {
 
 /* Estilos para o botão "Quero ser gerenciador" */
 #gerenciadorButton {
+  font-weight: bold;
+  letter-spacing:normal;
   padding: 15px;
   background-color: #f1c40f; /* Amarelo */
   color: #fff;

@@ -5,6 +5,14 @@ const path = require('path');
 const axios = require('axios');
 const { AES, enc } = require('crypto-js'); // Importando a biblioteca para criptografia
 const fs = require('fs');
+const mysql = require('mysql2/promise');
+
+const dbConfig = {
+    host: 'localhost',
+    user: 'root',
+    password: 'root',
+    database: 'robootjobsdb',
+};
 
 function getFileExtension(fileName) {
     return path.extname(fileName).slice(1);
@@ -75,42 +83,61 @@ router.get('/images/:hash', (req, res) => {
         res.sendStatus(404);
     }
 });
-
 const COOKIE_ID_UUID = process.env.COOKIE_ID_UUID;
 const COOKIE_ID_NAME = process.env.COOKIE_ID_NAME;
 const COOKIE_ID_NUMB = process.env.COOKIE_ID_NUMB;
 const ENCRYPTION_KEY = process.env.ENCRYPTION_KEY;
 
 router.get('/', (req, res) => {
+    const COOKIE_ID_UUID_GET = req.cookies[COOKIE_ID_UUID];
+    const COOKIE_ID_NAME_GET = req.cookies[COOKIE_ID_NAME];
+    const COOKIE_ID_NUMB_GET = req.cookies[COOKIE_ID_NUMB];
+    const ENCRYPTION_KEY_GET = req.cookies[ENCRYPTION_KEY];
 
-    if(req.cookies && req.cookies[COOKIE_ID_UUID]){
-
-        const COOKIE_ID_UUID_GET = req.cookies[COOKIE_ID_UUID];
-
-        if (COOKIE_ID_UUID_GET) {
-            res.redirect('http://dev01.briotecnologia.com.br:3000/dashboard');
-        } else {
-            res.sendFile(path.join(__dirname, '..', 'views', 'login', 'index.html'));
-        }
-    }
-    else {
+    if (COOKIE_ID_UUID_GET) {
+        res.redirect('http://dev01.briotecnologia.com.br:3000/dashboard');
+    } else {
         res.sendFile(path.join(__dirname, '..', 'views', 'login', 'index.html'));
     }
- 
 });
+
 
 router.post('/', async (req, res) => {
     try {
-        const formData = req.body;
-        const webhookURL = 'https://api.123zap.com.br/webhook/login';
-        const response = await axios.post(webhookURL, formData);
 
-        console.log('Response Data:', response.data);
+        const connection = await mysql.createConnection(dbConfig);
 
-        if (response.data.validate) {
-            const encryptedHash1 = encryptData(response.data.hash1, ENCRYPTION_KEY);
-            const encryptedHash2 = encryptData(response.data.hash2, ENCRYPTION_KEY);
-            const encryptedHash3 = encryptData(response.data.hash3, ENCRYPTION_KEY);
+        let [result] = await connection.execute(`
+    SELECT 
+        CASE 
+            WHEN EXISTS (
+                SELECT 1
+                FROM users
+                WHERE email = '${req.body.username}' AND password = MD5('${req.body.password}')
+            ) THEN true
+            ELSE false
+        END AS validate,
+        CASE 
+            WHEN EXISTS (
+                SELECT 1
+                FROM users
+                WHERE email = '${req.body.username}' AND password = MD5('${req.body.password}')
+            ) THEN (SELECT uuid FROM users WHERE email = '${req.body.username}' AND password = MD5('${req.body.password}'))
+            ELSE null
+        END AS user_uuid,
+        name,
+        id
+    FROM users
+    WHERE email = '${req.body.username}' AND password = MD5('${req.body.password}');
+`);
+
+        connection.end();
+        console.log(result[0])
+        if (result[0].validate && result[0].user_uuid && result[0].name && result[0].id) {
+            // Assuming these properties are present in the result object
+            const encryptedHash1 = encryptData(result[0].user_uuid, ENCRYPTION_KEY);
+            const encryptedHash2 = encryptData(result[0].name, ENCRYPTION_KEY);
+            const encryptedHash3 = encryptData(result[0].id.toString(), ENCRYPTION_KEY);
 
             res.cookie(COOKIE_ID_UUID, encryptedHash1, { maxAge: 3600000 });
             res.cookie(COOKIE_ID_NAME, encryptedHash2, { maxAge: 3600000 });
@@ -121,10 +148,11 @@ router.post('/', async (req, res) => {
             res.status(401).json({ error: 'Login failed' });
         }
     } catch (error) {
-        console.error('Error sending data to the webhook:', error);
-        res.status(500).json({ error: 'Error sending data to the webhook' });
+        console.error('Error during authentication:', error);
+        res.status(500).json({ error: 'Error during authentication' });
     }
 });
+
 
 
 router.post('/upload', upload.single('avatar'), (req, res) => {
