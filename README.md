@@ -6,6 +6,9 @@
   [![Typing SVG](https://readme-typing-svg.herokuapp.com/?color=FFD700&size=35&center=true&vCenter=true&width=1000&lines=IMPULSIONE+O+DESENVOLVIMENTO+ECONÔMICO+LOCAL;JUNTE-SE+AO+ROBOOTJOBS+🚀)](https://git.io/typing-svg)
 </div>
 
+
+[![My Skills](https://skillicons.dev/icons?i=github,nodejs,docker,instagram,js,mysql&perline=10)](https://skillicons.dev)
+-
 <div style="margin: auto; text-align: center;">
   <img width="300px" src="vagasbarreiro.png">
 </div>
