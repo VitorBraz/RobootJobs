@@ -15,7 +15,7 @@ app.use(cookieParser());
 
 app.use(bodyParser.json());
 app.use(cors({
-  origin: 'http://dev01.briotecnologia.com.br:3000', // Substitua pelo domínio do seu frontend
+  origin: 'http://localhost:3001', // Substitua pelo domínio do seu frontend
   credentials: true // Se você estiver enviando credenciais, como cookies
 }));
 
@@ -26,11 +26,6 @@ const dbConfig = {
   password: 'root',
   database: 'roobotjobsdb',
 };
-
-app.use(cors({
-  origin: 'http://dev01.briotecnologia.com.br:3000', // Substitua pelo domínio do seu frontend
-  credentials: true // Se você estiver enviando credenciais, como cookies
-}));
 
 // Configuração do middleware cookie-parser
 

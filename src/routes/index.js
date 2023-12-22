@@ -95,7 +95,7 @@ router.get('/', (req, res) => {
     const ENCRYPTION_KEY_GET = req.cookies[ENCRYPTION_KEY];
 
     if (COOKIE_ID_UUID_GET) {
-        res.redirect('http://dev01.briotecnologia.com.br:3000/dashboard');
+        res.redirect('http://localhost:3001/dashboard');
     } else {
         res.sendFile(path.join(__dirname, '..', 'views', 'login', 'index.html'));
     }
