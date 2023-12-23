@@ -24,7 +24,7 @@ const dbConfig = {
   host: 'localhost',
   user: 'root',
   password: 'root',
-  database: 'roobotjobsdb',
+  database: 'robootjobsdb',
 };
 
 // Configuração do middleware cookie-parser
@@ -100,6 +100,42 @@ app.post('/receivedjob', async (req, res) => {
     res.status(500).json({ error: 'Erro interno do servidor' });
   }
 });
+
+
+// Rota para obter os dados para o dashboard
+app.get('/dashboarddata', async (req, res) => {
+  try {
+    const connection = await mysql.createConnection(dbConfig);
+
+    // Construa a consulta para obter os dados do dashboard
+    const query = `
+      SELECT
+        COUNT(*) AS total_vagas,
+        SUM(CASE WHEN publicar_vaga = 'SIM' THEN 1 ELSE 0 END) AS vagas_publicadas,
+        SUM(CASE WHEN confidencial = 'Sim' THEN 1 ELSE 0 END) AS vagas_confidenciais,
+        COUNT(DISTINCT nome_empresa) AS total_empresas,
+        TIMESTAMPDIFF(HOUR, (SELECT MIN(timestamp) FROM vagas), (SELECT MAX(timestamp) FROM vagas)) AS horas_entre_primeira_e_ultima_publicacao,
+        (SUM(CASE WHEN confidencial = 'Sim' THEN 1 ELSE 0 END) / COUNT(*)) * 100 AS taxa_vagas_confidenciais,
+        AVG(TIMESTAMPDIFF(HOUR, (SELECT MIN(timestamp) FROM vagas), (SELECT MAX(timestamp) FROM vagas))) AS media_horas_entre_publicacoes,
+        AVG(LENGTH(habilidades) - LENGTH(REPLACE(habilidades, '*', '')) + 1) AS media_habilidades_por_vaga
+      FROM
+        vagas;
+    `;
+
+    // Execute a consulta
+    const [results] = await connection.execute(query);
+
+    // Feche a conexão
+    await connection.end();
+
+    // Envie os resultados como resposta
+    res.status(200).json(results[0]);
+  } catch (error) {
+    console.error('Erro ao obter dados do dashboard:', error);
+    res.status(500).json({ error: 'Erro interno do servidor' });
+  }
+});
+
 
 app.listen(PORT, () => {
   console.log(`Servidor rodando na porta ${PORT}`);
